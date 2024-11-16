@@ -1,0 +1,99 @@
+Servlets
+=========
+
+
+Web Application
+================
+A web application is a collection of web resource programs having the capability to generate web pages.
+
+We have two types of web pages.
+
+1) Static web pages 
+-------------------
+A web page with fixed content is called static web page.
+
+A static web page is also known as passive web page.
+
+ex:
+	Home page 
+	AboutUs page
+	Contact page 
+	Facebook login page 
+	and etc.
+	
+
+2) Dynamic web pages 
+-------------------
+A web page with dynamic content is called dynamic web page.
+
+A dynamic web page is also known as active web page.
+
+ex:
+	Live cricket score page 
+	Stock Market share value page 
+	news page 
+	and etc.
+
+We have two types of web resource programs.
+
+1) Static web resource programs 
+--------------------------------
+Static web resource programs are used to generate static web pages.
+
+ex:
+	HTML program 
+	CSS program 
+	Bootstrap program 
+	Angularjs program
+	and etc.
+
+
+2) Dynamic web resource programs 
+-----------------------------------
+Dynamic web resource programs are used to generate dynamic web pages.
+
+ex:
+	Servlet program 
+	JSP program 
+	and etc.
+
+
+Based on the position and execution these web resource programs are divided into two types.
+
+1) Client side web resource program 
+-----------------------------------
+A web resource program which executes at client side is called client side web resource program.
+
+All static web resource programs are called client side web resource programs.
+
+ex:
+	HTML program 
+	CSS program
+	Bootstrap program
+	angularjs program 
+	and etc.
+
+
+2) Server side web resource program 
+--------------------------------
+A web resource program which executes at server side is called server side web resource program.
+
+All dynamic web resource programs are called servers side web resource programs.
+
+ex:
+	servlet program 
+	jsp program 
+	and etc
+
+
+
+
+
+
+
+
+
+
+
+
+

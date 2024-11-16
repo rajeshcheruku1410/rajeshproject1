@@ -1,0 +1,675 @@
+File Uploading 
+==============
+The process of capturing a file from client machine file system and storing in a server machine file system is called file uploading and reverse is called file downloading.
+
+While dealing with matrimonial applications, job portal applications, profile management applications we need to upload or download the files.
+
+There is no specific API in servlet to perform file uploading.
+
+Here we need to take the support of third party API called JAVAZOOM API.
+
+JAVAZOOM API comes in zip file and once if we extracted we will get three jar files.
+
+ex:
+	uploadbean.jar  (main jar file)
+	struts.jar      (dependent jar file)
+	cos.jar         (dependent jar file)
+
+We can take file component in a form page as follow.
+ex:
+	<input type="file" name="f1"/>
+
+
+JAVAZOOM API 
+============
+Download link : https://drive.google.com/file/d/1LB0WSJvSCCVOgz7xNwyuYtmy_0_TfJzq/view?usp=drive_link
+
+
+Deployment Directory Structure
+------------------------------
+UploadApp
+|
+|---Java Resources
+|	|	
+	|------src
+		|
+		|---com.ihub.www
+			|
+			|----UploadSrv.java
+
+|---WebContent
+	|
+	|----form.html
+	|
+	|----WEB-INF
+		|
+		|------web.xml 
+		|------lib
+			|
+			|---uploadbean.jar
+			|---struts.jar
+			|---cos.jar 
+Note:
+-----
+In above application we need to add "servlet-api.jar" file and "uploadbean.jar" file in project build path.
+
+Copy and paste javazoom jar files inside "WEB-INF/lib" folder seperately.
+
+
+form.html
+----------
+<form action="test" method="POST" enctype="multipart/form-data">
+	
+	File1 : <input type="file" name="f1"/> <br>
+	
+	File2 : <input type="file" name="f2"/> <br>
+	
+	<input type="submit" value="upload"/>
+
+</form>
+
+web.xml
+--------
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
+ 
+ 	<servlet>
+ 		<servlet-name>UploadSrv</servlet-name>
+ 		<servlet-class>com.ihub.www.UploadSrv</servlet-class>
+ 	</servlet>
+ 	<servlet-mapping>
+ 		<servlet-name>UploadSrv</servlet-name>
+ 		<url-pattern>/test</url-pattern>
+ 	</servlet-mapping>
+ 	
+ 	<welcome-file-list>
+ 		<welcome-file>form.html</welcome-file>
+ 	</welcome-file-list>
+ 
+</web-app>
+
+UploadSrv.java
+-------------
+package com.ihub.www;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import javazoom.upload.MultipartFormDataRequest;
+import javazoom.upload.UploadBean;
+
+public class UploadSrv extends HttpServlet 
+{
+	protected void doPost(HttpServletRequest req,HttpServletResponse res)throws ServletException,IOException
+	{
+		PrintWriter pw=res.getWriter();
+		res.setContentType("text/html");
+		
+		//file uploading logic
+		try
+		{
+			UploadBean ub=new UploadBean();
+			ub.setFolderstore("D:\\arvind");
+			ub.setOverwrite(false);
+			
+			MultipartFormDataRequest nreq=new MultipartFormDataRequest(req);
+			ub.store(nreq);
+			
+			pw.println("<center><h1> Files are uploaded successfully</h1></center>");
+		}
+		catch(Exception e)
+		{
+			pw.println(e);
+		}
+		
+		pw.close();
+	}
+}
+
+Request url
+---------
+	http://localhost:2525/UploadApp/
+
+
+
+
+
+Q) What is the difference between GET and POST methodology?
+
+GET						POST 
+-------------					----------
+It is a default methodology.			It is not a default methodology.
+
+It sends the request fastly.			It is bit slow.
+
+It carries limited amount of data.		It carries unlimited amount of data.
+
+It is not suitable for secure the data.		It is suitable for secure.
+
+It is not suitable for encryption and file	It is suitable for encryption and file
+uploading.					uploading.
+
+To process GET methodology we will use		To process POST methodology we will use  
+doGet(-,-) method.				doPost(-,-) method.
+
+
+Q) How to enable <load-on-startup> and what happens if we enable <load-on-startup>?
+
+We can enable <load-on-startup> inside web.xml file.
+
+web.xml
+---------
+<web-app>
+	<servlet>
+ 		<servlet-name>TestSrv</servlet-name>
+ 		<servlet-class>com.ihub.www.TestSrv</servlet-class>
+		<load-on-startup>1</load-on-startup>
+ 	</servlet>
+ 	<servlet-mapping>
+ 		<servlet-name>TestSrv</servlet-name>
+ 		<url-pattern>/test</url-pattern>
+ 	</servlet-mapping>
+</web-app>
+
+If we enable <load-on-startup> then our servlet container will create servlet project during the server startup or during the deployment of web application.
+
+In general, our servlet container creates servlet object before we give the request.
+
+
+Stateless Behaviour of Web Application
+=======================================
+Diagram: servlet7.1
+
+In above diagram demostrate stateless behaviour of web application.
+
+In stateless web application, no web resource program can access previous request data while processing the current request.
+
+To overcome this limitation we need to use session tracking.
+
+Deployment Directory Structure
+------------------------------
+StatelessApp
+|
+|---Java Resources
+|	|	
+	|------src
+		|
+		|---com.ihub.www
+			|
+			|----TestSrv1.java
+			|----TestSrv2.java
+|---WebContent
+	|
+	|----form.html
+	|
+	|----WEB-INF
+		|
+		|------web.xml 
+Note:
+----
+In above application we need to add "servlet-api.jar" file in project build path.
+
+form.html
+---------
+
+<form action="test1" method="POST">
+	
+	Name: <input type="text" name="t1"/> <br>
+	
+	Father Name: <input type="text" name="t2"/> <br>
+	
+	Maritial Status : 
+	<input type="checkbox" name="t3" value="married"/> MARRIED
+	<input type="checkbox" name="t3" value="single"/> SINGLE
+	
+	<br>
+	
+	<input type="submit" value="submit"/>
+	
+</form>
+
+web.xml
+---------
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
+  
+  	<servlet>
+  		<servlet-name>TestSrv1</servlet-name>
+  		<servlet-class>com.ihub.www.TestSrv1</servlet-class>
+  		<load-on-startup>1</load-on-startup>
+  	</servlet>
+  	<servlet-mapping>
+  		<servlet-name>TestSrv1</servlet-name>
+  		<url-pattern>/test1</url-pattern>
+  	</servlet-mapping>
+  	
+  	<servlet>
+  		<servlet-name>TestSrv2</servlet-name>
+  		<servlet-class>com.ihub.www.TestSrv2</servlet-class>
+  		<load-on-startup>2</load-on-startup>
+  	</servlet>
+  	<servlet-mapping>
+  		<servlet-name>TestSrv2</servlet-name>
+  		<url-pattern>/test2</url-pattern>
+  	</servlet-mapping>
+  	
+  	<welcome-file-list>
+  		<welcome-file>form.html</welcome-file>
+  	</welcome-file-list>
+  
+</web-app>
+
+TestSrv1.java
+---------------
+package com.ihub.www;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public class TestSrv1 extends HttpServlet 
+{
+	protected void doPost(HttpServletRequest req,HttpServletResponse res)throws ServletException,IOException
+	{
+		PrintWriter pw=res.getWriter();
+		res.setContentType("text/html");
+		
+		//reading form data 
+		String name = req.getParameter("t1");
+		String fname = req.getParameter("t2");
+		String ms = req.getParameter("t3");
+		
+		if(ms.equals("married"))
+		{
+			pw.println("<form action='test2' method='POST'>");
+			pw.println("Spouse Name : <input type='text' name='f2t1'/> <br>");
+			pw.println("No of Child : <input type='text' name='f2t2'/> <br>");
+			pw.println("<input type='submit' value='submit'/>");
+			pw.println("</form>");
+		}
+		else
+		{
+			pw.println("<form action='test2' method='POST'>");
+			pw.println("When will u marry : <input type='text' name='f2t1'/> <br>");
+			pw.println("Why will u marry : <input type='text' name='f2t2'/> <br>");
+			pw.println("<input type='submit' value='submit'/>");
+			pw.println("</form>");
+		}
+		
+		pw.close();
+	}
+}
+
+TestSrv2.java
+------------
+package com.ihub.www;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public class TestSrv2 extends HttpServlet 
+{
+	protected void doPost(HttpServletRequest req,HttpServletResponse res)throws ServletException,IOException
+	{
+		PrintWriter pw=res.getWriter();
+		res.setContentType("text/html");
+		
+		//reading form1  data 
+		String name = req.getParameter("t1");
+		String fname = req.getParameter("t2");
+		String ms = req.getParameter("t3");
+		
+		//reading form2 data
+		String val1=req.getParameter("f2t1");
+		String val2=req.getParameter("f2t2");
+		
+		pw.println("Form 1 Data :"+name+" "+fname+" "+ms+"<br>");
+		pw.println("Form 2 Data :"+val1+" "+val2+"<br>");
+		
+		pw.close();
+	}
+}
+
+Request url
+---------
+	http://localhost:2525/StatelessApp/
+
+
+
+Session
+=========
+The process of continue and related operations performed on web application with multiple request and response is called session.
+ex:
+	login to gmail and logout from gmail is one session.
+	starting of java class and ending of java class is one session.
+
+Our HTTP protocol stateless, which makes our web application also stateless.
+
+In stateless web application no web resource program can access previous request data while processing the current request during a session.	
+
+To overcome this limitation we need to use session tracking.
+
+Session Tracking or Session Management
+=======================================
+Session tracking is used to make our web application as statefull web application even thought our HTTP protocol is stateless.
+
+In stateless web application no web resource program can access previous request data while processing the current request during a session.
+
+In statefull web application all we resource programs can access previous request data while processing the current request during a session.
+
+There are four techniques to perform session tracking.
+
+1) Using hidden box fields 
+
+2) HttpCookies 
+
+3) HttpSession with Cookies 
+
+4) URL Rewriting 
+
+
+HttpSession with Cookies 
+========================
+In HttpSession with cookies, for every request it will create a unique session id.
+
+Our web container uses that session id to identify a user is a new user or existing user.
+
+HttpSession object we can use to perform following task.
+
+1)Bind the objects
+
+2)To manipuate the data in HttpSession object.
+
+Diagram:servlet7.2
+
+form.html
+-----------
+
+<form action="test1" method="POST">
+	
+	Name: <input type="text" name="t1"/> <br>
+	
+	Father Name: <input type="text" name="t2"/> <br>
+	
+	Maritial Status : 
+	<input type="checkbox" name="t3" value="married"/> MARRIED
+	<input type="checkbox" name="t3" value="single"/> SINGLE
+	
+	<br>
+	
+	<input type="submit" value="submit"/>
+	
+</form>
+
+web.xml
+--------
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
+  
+  	<servlet>
+  		<servlet-name>TestSrv1</servlet-name>
+  		<servlet-class>com.ihub.www.TestSrv1</servlet-class>
+  		<load-on-startup>1</load-on-startup>
+  	</servlet>
+  	<servlet-mapping>
+  		<servlet-name>TestSrv1</servlet-name>
+  		<url-pattern>/test1</url-pattern>
+  	</servlet-mapping>
+  	
+  	<servlet>
+  		<servlet-name>TestSrv2</servlet-name>
+  		<servlet-class>com.ihub.www.TestSrv2</servlet-class>
+  		<load-on-startup>2</load-on-startup>
+  	</servlet>
+  	<servlet-mapping>
+  		<servlet-name>TestSrv2</servlet-name>
+  		<url-pattern>/test2</url-pattern>
+  	</servlet-mapping>
+  	
+  	<welcome-file-list>
+  		<welcome-file>form.html</welcome-file>
+  	</welcome-file-list>
+  
+</web-app>
+
+
+
+TestSrv1.java
+-------------
+package com.ihub.www;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+public class TestSrv1 extends HttpServlet 
+{
+	protected void doPost(HttpServletRequest req,HttpServletResponse res)throws ServletException,IOException
+	{
+		PrintWriter pw=res.getWriter();
+		res.setContentType("text/html");
+		
+		//reading form data 
+		String name = req.getParameter("t1");
+		String fname = req.getParameter("t2");
+		String ms = req.getParameter("t3");
+		
+		//store the data in HttpSession
+		HttpSession session=req.getSession(true);
+		session.setAttribute("pname", name);
+		session.setAttribute("pfname", fname);
+		session.setAttribute("pms", ms);
+		
+		if(ms.equals("married"))
+		{
+			pw.println("<form action='test2' method='POST'>");
+			pw.println("Spouse Name : <input type='text' name='f2t1'/> <br>");
+			pw.println("No of Child : <input type='text' name='f2t2'/> <br>");
+			pw.println("<input type='submit' value='submit'/>");
+			pw.println("</form>");
+		}
+		else
+		{
+			pw.println("<form action='test2' method='POST'>");
+			pw.println("When will u marry : <input type='text' name='f2t1'/> <br>");
+			pw.println("Why will u marry : <input type='text' name='f2t2'/> <br>");
+			pw.println("<input type='submit' value='submit'/>");
+			pw.println("</form>");
+		}
+		
+		pw.close();
+	}
+}
+
+
+
+
+
+TestSrv2.java
+------------
+package com.ihub.www;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+public class TestSrv2 extends HttpServlet 
+{
+	protected void doPost(HttpServletRequest req,HttpServletResponse res)throws ServletException,IOException
+	{
+		PrintWriter pw=res.getWriter();
+		res.setContentType("text/html");
+		
+		//reading form1  data 
+		HttpSession session=req.getSession(false);
+		String name = (String)session.getAttribute("pname");
+		String fname = (String)session.getAttribute("pfname");
+		String ms = (String)session.getAttribute("pms");
+		
+		//reading form2 data
+		String val1=req.getParameter("f2t1");
+		String val2=req.getParameter("f2t2");
+		
+		pw.println("Form 1 Data :"+name+" "+fname+" "+ms+"<br>");
+		pw.println("Form 2 Data :"+val1+" "+val2+"<br>");
+		
+		pw.close();
+	}
+}
+
+
+
+Request url
+-----------
+	http://localhost:2525/StatelessApp/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
